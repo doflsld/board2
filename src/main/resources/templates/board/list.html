@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>게시판 - 목록</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" />
+</head>
+<style>
+    .sort{
+        border: none;
+        background: none;
+        font-weight: bold;
+    }
+</style>
+<body>
+<header th:insert="common/header.html" id="header"></header>
+<div class="container">
+    <table class="table">
+        <thead class="thead-light">
+        <tr class="text-center">
+            <form>
+                <th scope="col" th:if="${sort==0}"><button class="sort" th:type="submit" th:value="1" th:name="sort">순번 ▲</button></th>
+                <th scope="col" th:if="${sort==1}"><button class="sort" th:type="submit" th:value="0" th:name="sort">순번 ▼</button></th>
+            </form>
+            <th scope="col">제목</th>
+            <th scope="col">작성자</th>
+            <th scope="col">작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-center" th:each="board : ${boardList}">
+            <th scope="row">
+                <span th:text="${board.id}"></span>
+            </th>
+            <td>
+                <a th:href="@{'/post/' + ${board.id}}">
+                    <span th:text="${board.title}"></span>
+                </a>
+            </td>
+            <td>
+                <span th:text="${board.writer}"></span>
+            </td>
+            <td>
+                <span th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-auto mr-auto"></div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-primary" th:href="@{/post}" role="button">글쓰기</a>
+        </div>
+    </div>
+    <!--<div>
+    <span th:each="pageNum : ${pageList}" th:inline="text">
+        <a th:href="@{'/?page=' + ${pageNum}}">[[${pageNum}]]</a>
+    </span>
+    </div>-->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPage - 1)}" th:if="${sort==0}">
+                <a class="page-link" th:href="@{'/?page=' + ${page} + '&sort=' + ${sort}}">[[${page + 1}]]</a>
+            </li>
+            <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPage - 1)}" th:if="${sort==1}">
+                <a class="page-link" th:href="@{'/?page=' + ${page} + '&sort=' + ${sort}}">[[${page + 1}]]</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
